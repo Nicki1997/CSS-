@@ -1,0 +1,31 @@
+登陆之后的效果
+1. 常规登陆逻辑
+    网站会在cookie中写入登陆信息.
+    直接在登陆成功之后.
+    在返回的`响应头`里面带着`set-cookie`的字样.
+    后续的请求会在`请求头`中. 发现`cookie`的内容
+
+    用session来自动维护响应头的set-cookie
+    session = requests.session()
+
+2. ajax的登陆.
+    登陆后. 从浏览器中可以看到响应头可能没有"set-cookie"
+    但是, 在后续的访问中. 发现有cookie并且cookie有很明显的
+    登陆后的字样.
+    90%可能性是: cookie是通过javascript脚本语言. 动态设置的
+    这种情况. session就不能自动维护了. 需要我们通过程序手工去
+    完成cookie的拼接.
+
+    例如,
+    ajax登陆成功后返回的json:
+    {username: alex, usertoken: 10086}
+
+    需要按照js里的处理过程. 用python实现一样的逻辑.(逆向)
+
+3. 依然是ajax请求. 也没有响应头.也是js
+    和2的区别是. 它不会把登陆信息放在cookie中.
+    新型的网页基本上都是把登陆信息放在storage里.
+    每次请求. 都从storage拿出来登陆信息. 放在请求参数里.
+    这种网页. 必须去逆向了.
+
+    有一个统一的解决方案.  去找公共拦截器.
